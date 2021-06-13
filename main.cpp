@@ -1,3 +1,14 @@
+/*
+An example proxy for Wesnoth that allows interception and modification of traffic from a Wesnoth game client to a Wesnoth server. 
+In this case, any time the proxy sees the chat message "\wave", it will send an additional chat message saying "Hello!"
+
+The majority of the code is based off the Winsock example provided by Microsoft: 
+https://docs.microsoft.com/en-us/windows/win32/winsock/complete-client-code and 
+https://docs.microsoft.com/en-us/windows/win32/winsock/complete-server-code
+
+The proxying and overall approach are discussed in the article at: https://gamehacking.academy/lesson/38
+*/
+
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdio.h>
@@ -72,7 +83,7 @@ int main(void)
 
     DWORD timeout = 1000;
 
-    // Client
+    // Client Socket
     iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 
     ZeroMemory(&hints, sizeof(hints));
@@ -90,7 +101,7 @@ int main(void)
     ClientSocket = accept(ListenSocket, NULL, NULL);
     closesocket(ListenSocket);
 
-    // Server
+    // Server Socket
     ZeroMemory(&hints, sizeof(hints));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
